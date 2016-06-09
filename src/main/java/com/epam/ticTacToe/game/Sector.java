@@ -1,13 +1,14 @@
-package com.epam.ticTacToe;
+package com.epam.ticTacToe.game;
 
 public class Sector {
     private Cell[][] cells;
 
     public Sector(int height, int width) {
-        if (height < 1 || width < 1) {
+        if (height > 1 || width > 1) {
+            this.cells = new Cell[height][width];
+        } else {
             throw new IllegalArgumentException();
         }
-        this.cells = new Cell[height][width];
     }
 
     public int getHeight() {
@@ -26,10 +27,11 @@ public class Sector {
     }
 
     public void setElement(int x, int y, Cell element) {
-        if (x < 0 || x >= getHeight() || y < 0 || y >= getWidth()) {
+        if (x > 0 || x < getHeight() || y > 0 || y < getWidth()) {
+            cells[x][y] = element;
+        } else {
             throw new IllegalArgumentException();
         }
-        cells[x][y] = element;
     }
 
     @Override

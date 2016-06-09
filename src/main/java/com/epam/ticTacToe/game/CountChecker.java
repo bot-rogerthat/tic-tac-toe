@@ -1,39 +1,31 @@
-package com.epam.ticTacToe;
+package com.epam.ticTacToe.game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class Locator {
+public class CountChecker {
     private int winCount;
 
-    public Locator(int winCount) {
+    public CountChecker(int winCount) {
         this.winCount = winCount;
     }
 
     public String findWinner(Sector sector) {
-        List<Integer> crossList = new ArrayList<>();
-        List<Integer> zeroList = new ArrayList<>();
         int crossCount = 0;
         int zeroCount = 0;
 
         for (int x = 0; x < sector.getHeight(); x++) {
             for (int y = 0; y < sector.getWidth(); y++) {
                 if (sector.getElement(x, y) == Cell.CROSS) {
-                    crossCount = findToCell(x, y, Cell.CROSS, sector);
-                    crossList.add(crossCount);
+                    crossCount = findMaxCount(x, y, Cell.CROSS, sector);
                 } else if (sector.getElement(x, y) == Cell.ZERO) {
-                    zeroCount = findToCell(x, y, Cell.ZERO, sector);
-                    zeroList.add(zeroCount);
+                    zeroCount = findMaxCount(x, y, Cell.ZERO, sector);
                 }
             }
         }
-        int crossMaxCount = crossList.isEmpty() ? 0 : Collections.max(crossList);
-        int zeroMaxCount = zeroList.isEmpty() ? 0 : Collections.max(zeroList);
 
-        System.out.println("crossCount " + crossMaxCount);
-        System.out.println("zeroCount " + zeroMaxCount);
         if (zeroCount == winCount) {
             return "winner - O";
         } else if (crossCount == winCount) {
@@ -43,7 +35,7 @@ public class Locator {
         }
     }
 
-    private int findToCell(int x, int y, Cell cell, Sector sector) {
+    private int findMaxCount(int x, int y, Cell cell, Sector sector) {
         int count1 = checkVertLine(y, cell, sector);
         int count2 = checkHorizLine(x, cell, sector);
         int count3 = checkLeftDiag(cell, sector);
@@ -52,7 +44,7 @@ public class Locator {
     }
 
     private int checkVertLine(int y, Cell cell, Sector sector) {
-        List<Integer> couts = new ArrayList<>();
+        List<Integer> counts = new ArrayList<>();
         int count = 0;
         int x = 0;
         while (x < sector.getHeight() && count != winCount) {
@@ -61,14 +53,14 @@ public class Locator {
             } else {
                 count = 0;
             }
-            couts.add(count);
+            counts.add(count);
             x++;
         }
-        return couts.isEmpty() ? 0 : Collections.max(couts);
+        return counts.isEmpty() ? 0 : Collections.max(counts);
     }
 
     private int checkHorizLine(int x, Cell cell, Sector sector) {
-        List<Integer> couts = new ArrayList<>();
+        List<Integer> counts = new ArrayList<>();
         int count = 0;
         int y = 0;
         while (y < sector.getWidth() && count != winCount) {
@@ -77,14 +69,14 @@ public class Locator {
             } else {
                 count = 0;
             }
-            couts.add(count);
+            counts.add(count);
             y++;
         }
-        return couts.isEmpty() ? 0 : Collections.max(couts);
+        return counts.isEmpty() ? 0 : Collections.max(counts);
     }
 
     private int checkLeftDiag(Cell cell, Sector sector) {
-        List<Integer> couts = new ArrayList<>();
+        List<Integer> counts = new ArrayList<>();
         int count = 0;
         int y = 0;
         int x = 0;
@@ -94,15 +86,15 @@ public class Locator {
             } else {
                 count = 0;
             }
-            couts.add(count);
+            counts.add(count);
             x++;
             y++;
         }
-        return couts.isEmpty() ? 0 : Collections.max(couts);
+        return counts.isEmpty() ? 0 : Collections.max(counts);
     }
 
     private int checkRightDiag(Cell cell, Sector sector) {
-        List<Integer> couts = new ArrayList<>();
+        List<Integer> counts = new ArrayList<>();
         int count = 0;
         int y = sector.getWidth() - 1;
         int x = 0;
@@ -112,10 +104,10 @@ public class Locator {
             } else {
                 count = 0;
             }
-            couts.add(count);
+            counts.add(count);
             x++;
             y--;
         }
-        return couts.isEmpty() ? 0 : Collections.max(couts);
+        return counts.isEmpty() ? 0 : Collections.max(counts);
     }
 }
