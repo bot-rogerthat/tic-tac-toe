@@ -21,7 +21,7 @@ public class Game {
         this.currentPlayer = player;
     }
 
-    public synchronized boolean doStepIsValid(int numberOfCell, Cell cell, ServerThread player) {
+    public boolean doStepIsValid(int numberOfCell, Cell cell, ServerThread player) {
         if (player == currentPlayer && numberOfCell > 0 && numberOfCell <= sector.getHeight() * sector.getHeight()) {
             int[] position = calcPosition(numberOfCell);
             int x = position[0];
@@ -65,7 +65,7 @@ public class Game {
         return true;
     }
 
-    public synchronized String showBoard() {
+    public String showBoard() {
         StringBuilder sb = new StringBuilder();
         sb.append("---------&");
         for (int x = 0; x < sector.getHeight(); x++) {

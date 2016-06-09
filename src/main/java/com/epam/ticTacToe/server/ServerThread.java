@@ -47,6 +47,8 @@ public class ServerThread extends Thread {
             output.println("SHOW " + game.showBoard());
             if (cell == Cell.CROSS) {
                 output.println("STEP Your move");
+            } else {
+                output.println("MESSAGE Opponent moved, please wait");
             }
             while (true) {
                 String command = input.readLine();

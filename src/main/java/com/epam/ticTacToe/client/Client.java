@@ -12,13 +12,13 @@ import java.util.Scanner;
 
 import static com.epam.ticTacToe.client.Client.ServerCommand.*;
 
-public class Client implements Runnable {
+public class Client {
     private static final Logger log = LoggerFactory.getLogger(Client.class);
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) {
         new Client("localhost", 4444).run();
     }
 
@@ -73,12 +73,13 @@ public class Client implements Runnable {
                 }
             }
             out.println("QUIT");
-        } catch (IOException e) {
+        } catch (Exception e) {
             log.error("Play error: ", e);
         } finally {
             try {
                 socket.close();
-            } catch (IOException e) {
+            } catch (Exception e) {
+                System.out.println("Server not start!");
                 log.error("Socket close error: ", e);
             }
         }
