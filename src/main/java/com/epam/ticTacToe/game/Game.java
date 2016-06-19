@@ -2,32 +2,27 @@ package com.epam.ticTacToe.game;
 
 import com.epam.ticTacToe.server.ServerThread;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class Game {
-    private final int count;
-    private Sector sector;
-    private CountChecker countChecker;
+    private final Sector sector;
+    private final CountChecker countChecker;
     private ServerThread currentPlayer;
 
-    public Game(int x, int y, int count) {
-        this.sector = new Sector(x, y);
-        this.count = count;
-        this.countChecker = new CountChecker(this.count);
+    public Game(int height, int width, int winCount) {
+        this.sector = new Sector(height, width);
+        this.countChecker = new CountChecker(winCount);
     }
 
     public void setCurrentPlayer(ServerThread player) {
         this.currentPlayer = player;
     }
 
-    public boolean doStepIsValid(int numberOfCell, Cell cell, ServerThread player) {
+    public synchronized boolean doStepIsValid(int numberOfCell, ServerThread player) {
         if (player == currentPlayer && numberOfCell > 0 && numberOfCell <= sector.getHeight() * sector.getHeight()) {
             int[] position = calcPosition(numberOfCell);
             int x = position[0];
             int y = position[1];
             if (sector.getElement(x, y) == null) {
-                sector.setElement(x, y, cell);
+                sector.setElement(x, y, player.getCell());
             } else {
                 return false;
             }
@@ -40,14 +35,15 @@ public class Game {
     }
 
     private int[] calcPosition(int numberOfCell) {
-        Map<Integer, int[]> map = new HashMap<>();
-        int target = 0;
+        int[][] positions = new int[sector.getHeight() * sector.getWidth()][];
+        int count = 0;
         for (int x = 0; x < sector.getHeight(); x++) {
             for (int y = 0; y < sector.getWidth(); y++) {
-                map.put(++target, new int[]{x, y});
+                positions[count] = new int[]{x, y};
+                count++;
             }
         }
-        return map.get(numberOfCell);
+        return positions[--numberOfCell];
     }
 
     public boolean hasWinner() {
@@ -65,7 +61,7 @@ public class Game {
         return true;
     }
 
-    public String showBoard() {
+    public String convertBoardToString() {
         StringBuilder sb = new StringBuilder();
         sb.append("---------&");
         for (int x = 0; x < sector.getHeight(); x++) {
@@ -82,6 +78,10 @@ public class Game {
         }
         sb.append("---------");
         return sb.toString();
+    }
+
+    public void printBoard() {
+        System.out.println(convertBoardToString().replaceAll("&", "\n"));
     }
 
     public void clear() {

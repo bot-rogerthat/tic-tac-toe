@@ -15,22 +15,19 @@ public class Server {
 
     public void runServer() {
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
-
             System.out.println("Listening on port: " + serverSocket.getLocalPort());
-            while (true) {
-                ServerThread playerX = new ServerThread(serverSocket.accept(), game, Cell.CROSS);
-                System.out.println("Connected: " + playerX.getName());
-                ServerThread playerO = new ServerThread(serverSocket.accept(), game, Cell.ZERO);
-                System.out.println("Connected: " + playerO.getName());
-                game.clear();
-                playerX.setOpponent(playerO);
-                playerO.setOpponent(playerX);
-                game.setCurrentPlayer(playerX);
-                playerX.start();
-                playerO.start();
-                System.out.println("Game start!");
-                System.out.println(game.showBoard().replaceAll("&", "\n"));
-            }
+            ServerThread playerX = new ServerThread(serverSocket.accept(), game, Cell.CROSS);
+            System.out.println("Connected: " + playerX.getName());
+            ServerThread playerO = new ServerThread(serverSocket.accept(), game, Cell.ZERO);
+            System.out.println("Connected: " + playerO.getName());
+            game.clear();
+            playerX.setOpponent(playerO);
+            playerO.setOpponent(playerX);
+            game.setCurrentPlayer(playerX);
+            playerX.start();
+            playerO.start();
+            System.out.println("Game start!");
+            game.printBoard();
         } catch (Exception e) {
             log.error("Can not start server: ", e);
         }
